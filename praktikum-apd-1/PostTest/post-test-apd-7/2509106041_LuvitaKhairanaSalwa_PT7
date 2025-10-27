@@ -1,0 +1,246 @@
+import os
+users = [
+    {"username": "akito yamada", "password": "akane", "role": "penguasa"}
+]
+characters = []
+items = []
+login_login = 6
+
+# === PROSEDUR ===
+def show_title(teks):
+    print("═" * 60)
+    print(f"║ {teks.center(56)} ║")
+    print("═" * 60)
+
+
+def pesan_error(e):
+    print(f"Terjadi kesalahan: {e}")
+
+# fungsi 
+def tampilkan_characters():
+    if not characters:
+        print("Belum ada character.")
+    else:
+        for c in characters:
+            print(f"- {c['nama']} | {c['elemen']} | {c['rarity']} | {c['senjata']}")
+
+def tampilkan_items():
+    if not items:
+        print("Belum ada item.")
+    else:
+        for i in items:
+            print(f"- {i['id']} | {i['nama']} | {i['kategori']} | Rp{i['harga']}")
+
+def cari_character(nama):
+    for c in characters:
+        if c["nama"].lower() == nama.lower():
+            return c
+    return None
+
+def cari_item(id_item):
+    for i in items:
+        if i["id"].lower() == id_item.lower():
+            return i
+    return None
+
+# fungsi rekursif login
+def login(attempt=1):
+    if attempt > login_login:
+        print("Terlalu banyak gagal login. Program keluar.")
+        exit()
+    try:
+        uname = input("Username: ")
+        pw = input("Password: ")
+    except Exception as e:
+        pesan_error(e)
+        return login(attempt + 1)
+    for u in users:
+        if u["username"] == uname and u["password"] == pw:
+            print(f"Login sukses! Selamat datang {uname.title()}")
+            return u
+    print("Login salah! Coba lagi.")
+    return login(attempt + 1)
+
+# === MENU ADMIN ===
+def menu_admin():
+    while True:
+        os.system("cls" if os.name == "nt" else "clear")
+        show_title("MENU PENGUASA GAME")
+        print("   欢迎来到游戏管理菜单 !!!!  ")
+        print("[1] Tambah Character")
+        print("[2] Lihat Character")
+        print("[3] Ubah Character")
+        print("[4] Hapus Character")
+        print("[5] Tambah Item")
+        print("[6] Lihat Item")
+        print("[7] Ubah Item")
+        print("[8] Hapus Item")
+        print("[9] Logout")
+
+        pilih = input("Pilih menu: ")
+        try:
+            # Tambah Character
+            if pilih == "1":
+                show_title("TAMBAH CHARACTER")
+                nama = input("Nama: ")
+                elemen = input("Elemen (Pyro/Hydro/Anemo/Electro/Cryo/Geo/Dendro):")
+                rarity = input("Rarity (4★/5★): ")
+                senjata = input("Senjata(Sword/Bow/Polearm/Catalyst/Claymore): ")
+                region = input("Region: ")
+                role = input("Role(DPS/Sub-DPS/Support/Healer): ")
+                skill = input("Ultimate Skill: ")
+
+                char = {
+                    "nama": nama,
+                    "elemen": elemen,
+                    "rarity": rarity,
+                    "senjata": senjata,
+                    "region": region,
+                    "role": role,
+                    "skill": skill
+                }
+                characters.append(char)
+                print("Berhasil menambah character!")
+
+            # Lihat Character
+            elif pilih == "2":
+                show_title("DAFTAR CHARACTER")
+                tampilkan_characters()
+
+            # Ubah Character
+            elif pilih == "3":
+                show_title("UBAH CHARACTER")
+                nama = input("Nama character: ")
+                c = cari_character(nama)
+                if c:
+                    c["senjata"] = input("Senjata baru: ")
+                    print("Berhasil diubah!")
+                else:
+                    print("Character tidak ditemukan!")
+
+            # Hapus Character
+            elif pilih == "4":
+                show_title("HAPUS CHARACTER")
+                nama = input("Nama character: ")
+                c = cari_character(nama)
+                if c:
+                    characters.remove(c)
+                    print("Berhasil dihapus!")
+                else:
+                    print("Tidak ditemukan!")
+
+            # Tambah Item
+            elif pilih == "5":
+                show_title("TAMBAH ITEM")
+                id_item = input("ID Item: ")
+                nama_item = input("Nama Item: ")
+                kategori = input("Kategori: ")
+                rarity = input("Rarity: ")
+                efek = input("Efek: ")
+                harga = input("Harga: ")
+
+                item = {
+                    "id": id_item,
+                    "nama": nama_item,
+                    "kategori": kategori,
+                    "rarity": rarity,
+                    "efek": efek,
+                    "harga": harga
+                }
+                items.append(item)
+                print("Berhasil menambah item!")
+
+            # Lihat Item
+            elif pilih == "6":
+                show_title("DAFTAR ITEM")
+                tampilkan_items()
+            # Ubah Item
+            elif pilih == "7":
+                show_title("UBAH ITEM")
+                id_item = input("ID Item: ")
+                i = cari_item(id_item)
+                if i:
+                    i["efek"] = input("Efek baru: ")
+                    print("Berhasil diubah!")
+                else:
+                    print("Item tidak ditemukan!")
+            # Hapus Item
+            elif pilih == "8":
+                show_title("HAPUS ITEM")
+                id_item = input("ID Item: ")
+                i = cari_item(id_item)
+                if i:
+                    items.remove(i)
+                    print("Berhasil dihapus!")
+                else:
+                    print("Tidak ditemukan!")
+
+            # Logout
+            elif pilih == "9":
+                break
+
+            else:
+                print("Menu tidak valid!")
+        except Exception as e:
+            pesan_error(e)
+
+        input("Tekan Enter...")
+# === MENU PLAYER ===
+def menu_player():
+    while True:
+        os.system("cls" if os.name == "nt" else "clear")
+        show_title("MENU PLAYER")
+        print("[1] Lihat Character")
+        print("[2] Lihat Item")
+        print("[3] Logout")
+        pilih = input("Pilih menu: ")
+        if pilih == "1":
+            show_title("CHARACTER TERSEDIA")
+            tampilkan_characters()
+
+        elif pilih == "2":
+            show_title("ITEM TERSEDIA")
+            tampilkan_items()
+
+        elif pilih == "3":
+            break
+
+        else:
+            print("Pilihan tidak valid!")
+
+        input("Tekan Enter...")
+
+# === PROGRAM UTAMA ===
+while True:
+    os.system("cls" if os.name == "nt" else "clear")
+    show_title("SISTEM GENSHIN IMPACT")
+
+    print("[1] Login")
+    print("[2] Register")
+    print("[3] Keluar")
+
+    pilih = input("Pilih menu: ")
+
+    if pilih == "1":
+        user_login = login()
+        if user_login["role"] == "penguasa":
+            menu_admin()
+        else:
+            menu_player()
+
+    elif pilih == "2":
+        show_title("REGISTER")
+        uname = input("Username baru: ")
+        if any(u["username"] == uname for u in users):
+            print("Username sudah digunakan!")
+        else:
+            pw = input("Password: ")
+            users.append({"username": uname, "password": pw, "role": "player"})
+            print("Akun berhasil dibuat!")
+        input("Tekan Enter...")
+    elif pilih == "3":
+        print("Program selesai! Terima kasih bermain.")
+        break
+    else:
+        print("Pilihan tidak valid!")
+        input("Tekan Enter...")
